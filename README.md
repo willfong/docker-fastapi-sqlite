@@ -1,17 +1,19 @@
-# Docker / FastAPI / Vue / DynamoDB
+# Docker / FastAPI / Vue / SQLite
 
-This is a template repository for an opinionated proof-of-concept architecture.
+This is a template repository for an opinionated proof-of-concept architecture. 
 
 
 ## Guiding Principles
 
 - Local development - The entire infrastrucutre must easily run locally for end-to-end testing
-- Cloud deployment - We're focused on AWS-specifics here
+- Minimal Deployment - Use the smallest amount of resources possible
+- Redis Cache - Use a Redis single-instance cache to reduce load on SQLite
 
 
 ## Getting Started
 
-1. https://github.com/willfong/docker-fastapi-ddb/generate to create your own copy of this template
+1. https://github.com/willfong/docker-fastapi-sqlite/generate to create your own copy of this template
+1. Import SQL schema: `sqlite3 sqlite.db < schema.sql`
 
 
 ## Vue
@@ -20,28 +22,15 @@ Start with: `npm install`
 Build with: `npm run build; cp -r dist/* ../static`
 
 
-## DynamoDB Notes
-
-There is no need to specify AWS credentials. dynamodb-local just needs to have a non-empty string.
-
-Use Terraform to provision the DDB schema: `terraform apply -auto-approve`
-
-Manually check tables: `aws dynamodb scan --endpoint-url http://localhost:8000 --table-name Users`
 
 
 ## Environment File
 
 The system looks for `.env` in the checkout folder:
 ```
-AWS_ACCESS_KEY_ID=no_key_needed
-AWS_SECRET_ACCESS_KEY=no_key_needed
-AWS_REGION_NAME=us-west-2
 FACEBOOK_CLIENT_ID=123...890
 FACEBOOK_CLIENT_SECRET=123...abc
-DDB_ENDPOINT_URL=http://ddb:8000
 REDIS_ENDPOINT_URL=redis
-STATSD_ENDPOINT_URL=statsd
-STATSD_PREFIX=myapp
 ```
 
 
@@ -56,8 +45,7 @@ https://developers.google.com/identity/protocols/OpenIDConnect
 - `docker-compose up`
 - `npm install`
 - `npm run build; cp -r dist/* ../static`
-- `terraform init`
-- `terraform apply -auto-approve`
+
 
 
 Redis:

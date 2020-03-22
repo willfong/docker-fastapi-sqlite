@@ -30,6 +30,7 @@ export default new Vuex.Store({
     messageGet({getters, dispatch, commit}) {
       axios.get("/messages/").then(function(response) {
         if (response.data) {
+          console.log(response.data); // eslint-disable-line no-console
           let x;
           for (x of response.data){
             if (!getters.userCache[x.user_id]) {

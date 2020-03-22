@@ -1,30 +1,14 @@
 import uuid
 from datetime import datetime
-from ..services import ddb
-from ..services import util, statsd
+from ..services import util, sqlite
 
-@statsd.statsd_root_stats
-def add(user_id, message_text):
-    msg_id = str(uuid.uuid4())
-    dt = datetime.utcnow().isoformat()
-    item = {
-        'id': msg_id,
-        'datetime': dt,
-        'user_id': user_id,
-        'message_text': message_text,
-    }
-    return ddb.put(ddb.MESSAGES, item)
-
-@statsd.statsd_root_stats
-def get_all():
-    return ddb.scan(ddb.MESSAGES, sort='datetime')
-
-'''
-def add(pid, dt, uid, todo):
-    if ddbddb_todos_add_todo(pid, dt, uid, todo):
+def add(users_id, message_text):
+    query = "INSERT INTO messages (created_at, users_id, message) VALUES (?,?,?)"
+    params = (datetime.utcnow().isoformat(), users_id, message_text)
+    if sqlite.write(query, params):
         return True
     return False
 
-def get():
-    return aws.ddb_todos_get_all()
-'''
+def get_all():
+    query = "SELECT * FROM messages ORDER BY created_at"
+    return sqlite.read(query)

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from .routers import login, messages
-from .services import util, statsd
+from .services import util
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
 from starlette.responses import RedirectResponse, JSONResponse, HTMLResponse
@@ -16,15 +16,12 @@ app.include_router(messages.router, prefix="/messages")
 
 
 @app.get("/.*", include_in_schema=False)
-@statsd.statsd_root_stats
 def root():
     with open('/app/app/static/index.html') as f:
         return HTMLResponse(content=f.read(), status_code=200)
 
 
-
 @app.get("/log-output-test")
-@statsd.statsd_root_stats
 def log_output_test():
     util.logger.debug("logging debug")
     util.logger.info("logging info")

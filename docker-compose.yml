@@ -4,7 +4,6 @@ services:
     container_name: app
     build: .
     depends_on:
-      - ddb
       - redis
     ports:
       - "5000:80"
@@ -12,26 +11,8 @@ services:
       - .env
     volumes:
       - "./static:/app/app/static/"
-
-  ddb:
-    container_name: ddb
-    image: amazon/dynamodb-local
-    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
-    volumes:
-     - ./data/ddb:/home/dynamodblocal/data
-    ports:
-        - "8000:8000"
+      - "./data/sqlite.db:/sqlite.db"
   
   redis:
     container_name: redis
     image: redis:5
-
-  statsd:
-    container_name: statsd
-    image: graphiteapp/graphite-statsd
-
-  grafana:
-    container_name: grafana
-    image: grafana/grafana
-    ports:
-      - "9000:3000"
