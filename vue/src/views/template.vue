@@ -28,10 +28,10 @@ export default {
   methods: {
     someFun() {
       console.log("Have some fun"); // eslint-disable-line no-console
-      axios.post('/some/url', {key: value}).then(response => {
+      axios.post("/some/url", {key: value}).then(response => {
         this.$store.dispatch("someAction", response.data);
       });
-      axios.get('/some/other/url', {params: {id: 123}}).then(response => {
+      axios.get("/some/other/url", {params: {id: 123}}).then(response => {
         this.$store.dispatch("someAction", response.data);
       });
     },

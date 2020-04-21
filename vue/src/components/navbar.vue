@@ -57,7 +57,7 @@ export default {
     googleLogin (googleUser) {
       var gjwt = googleUser.getAuthResponse().id_token;
       console.log("Google Login: " + gjwt); // eslint-disable-line no-console
-      axios.post('/users/google', {
+      axios.post('/api//users/google', {
         value: gjwt
       })
       .then(response => {
@@ -70,7 +70,7 @@ export default {
     },
     fbLogin(response) {
       console.log("Facebook Login: " + response.authResponse.accessToken); // eslint-disable-line no-console
-      axios.post('/users/facebook', {
+      axios.post('/api//users/facebook', {
         value: response.authResponse.accessToken
       })
       .then(response => {
@@ -81,7 +81,7 @@ export default {
     testAccountLogin() {
       var username = prompt("Please enter in a user name:");
       console.log("Logging in with test account: " + username); // eslint-disable-line no-console
-      axios.post('/users/test-account', {
+      axios.post('/api/users/test-account', {
         value: username
       })
       .then(response => {

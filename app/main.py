@@ -11,8 +11,8 @@ app = FastAPI()
 # files from S3 directly.
 app.mount("/static", StaticFiles(directory="/app/app/static"), name="static")
 
-app.include_router(users.router, prefix="/users")
-app.include_router(messages.router, prefix="/messages")
+app.include_router(users.router, prefix="/api/users")
+app.include_router(messages.router, prefix="/api/messages")
 
 
 @app.get("/.*", include_in_schema=False)

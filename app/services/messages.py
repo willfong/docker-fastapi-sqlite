@@ -9,6 +9,6 @@ def add(users_id, message_text):
         return True
     return False
 
-def get_all():
-    query = "SELECT * FROM messages ORDER BY created_at DESC"
+def all():
+    query = "SELECT m.id, m.created_at, m.message, u.name FROM messages AS m INNER JOIN users AS u ON m.users_id = u.id ORDER BY m.created_at DESC"
     return sqlite.read(query)

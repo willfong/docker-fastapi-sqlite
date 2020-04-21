@@ -6,10 +6,10 @@
           <div class="content">
             <div class="field has-addons has-addons-centered">
               <div class="control is-expanded">
-                <input class="input" type="text" v-model="message" placeholder="Add new message" />
+                <input class="input" type="text" v-model="text" placeholder="Add new message" />
               </div>
               <div class="control">
-                <button class="button is-link" v-on:click="submit">Add</button>
+                <button class="button is-link" @click="submit">Add</button>
               </div>
             </div>
           </div>
@@ -20,17 +20,21 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "newMessage",
   data() {
     return {
-      message: null
+      text: null,
     };
   },
   methods: {
     submit() {
-      this.$store.dispatch("messageAdd", this.message);
-      this.message = null;
+      axios.post("/api/messages/add", {text: this.text}).then(() => {
+        this.text = null;
+        this.$emit('added');
+      });
     }
   }
 };

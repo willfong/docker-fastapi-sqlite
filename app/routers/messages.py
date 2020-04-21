@@ -6,7 +6,7 @@ router = APIRouter()
 
 @router.get("/")
 def get():
-    return messages.get_all() 
+    return messages.all() 
 
 class Message(BaseModel):
     text: str
