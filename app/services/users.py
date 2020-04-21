@@ -2,8 +2,25 @@ import os
 import hashlib
 import requests
 import json
-from fastapi import HTTPException
-from ..services import redis, util, sqlite
+from ..services import util, sqlite
+
+def get_details(id):
+    query = "SELECT * FROM users WHERE id = ?"
+    params = (id,)
+    return sqlite.read(query, params, one=True)
+
+def lookup(oauth):
+    query = "SELECT * FROM users WHERE oauth = ?"
+    params = (oauth,)
+    return sqlite.read(query, params, one=True)
+
+def find_or_create_user(oauth):
+    user_hash = hashlib.sha224(oauth.encode('ascii')).hexdigest()
+    query = "INSERT INTO users (oauth, last_login) VALUES (?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) ON CONFLICT (oauth) DO UPDATE SET last_login = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')"
+    params = (user_hash,)
+    if not sqlite.write(query, params):
+        return False
+    return user_hash
 
 def google_verify_access_token(id_token):
     # We're doing it the lazy way here. What we get from the client side is JWT, we can just verify that instead of calling Google
@@ -14,7 +31,7 @@ def google_verify_access_token(id_token):
     if response.get('error'):
         errmsg = response.get('error_description')
         util.logger.error(f"[USER|google_verify_access_token] {errmsg}")
-        raise HTTPException(status_code=403, detail="Invalid Google Token")
+        return false
     # Here, you should check that your domain name is in hd
     # if jwt['hd'] == 'example.com':
     #   return jwt
@@ -38,7 +55,7 @@ def facebook_verify_access_token(access_token):
     user_data = requests.get(user_data_url).json()
     return user_data
 
-
+'''
 def find_or_create_user(oauth_source, user_id, oauth_payload):
     user_plaintext = f"{oauth_source}|{user_id}"
     user_hash = hashlib.sha224(user_plaintext.encode('ascii')).hexdigest()
@@ -48,15 +65,6 @@ def find_or_create_user(oauth_source, user_id, oauth_payload):
         return user_hash
     else:
         return False
+'''
 
 
-def lookup(id):
-    u = redis.get(id)
-    if not u:
-        query = "SELECT oauth_payload FROM users WHERE userhash = ?"
-        params = (id, )
-        user_detail = sqlite.read(query, params, one=True)
-        util.logger.warning(user_detail)
-        u = {'name': 'will'}
-        redis.put(id, u, 3600*24)
-    return u

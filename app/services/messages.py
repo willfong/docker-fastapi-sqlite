@@ -10,5 +10,5 @@ def add(users_id, message_text):
     return False
 
 def get_all():
-    query = "SELECT * FROM messages ORDER BY created_at"
+    query = "SELECT * FROM messages ORDER BY created_at DESC"
     return sqlite.read(query)

@@ -48,7 +48,7 @@ export default new Vuex.Store({
       });
     },
     userCacheLookup({dispatch}, userId) {
-      axios.get("/login/lookup", {params: {id: userId} }).then(function(response) {
+      axios.get("/users/lookup", {params: {id: userId} }).then(function(response) {
         let user = {}
         user[userId] = response.data
         dispatch('userCacheAdd', user);

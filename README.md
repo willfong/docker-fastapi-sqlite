@@ -30,7 +30,6 @@ The system looks for `.env` in the checkout folder:
 ```
 FACEBOOK_CLIENT_ID=123...890
 FACEBOOK_CLIENT_SECRET=123...abc
-REDIS_ENDPOINT_URL=redis
 ```
 
 

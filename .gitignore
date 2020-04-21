@@ -135,4 +135,4 @@ terraform.tfstate
 terraform/terraform.tfstate.backup
 
 # Local Data
-data
+sqlite.db

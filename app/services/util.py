@@ -2,6 +2,10 @@ import os
 import jwt
 import requests
 import logging
+import random
+import string
+from datetime import datetime, timedelta
+from ..services import users
 
 
 logger = logging.getLogger(__name__)
@@ -10,22 +14,30 @@ handler = logging.StreamHandler()
 handler.setFormatter(myFormatter)
 logger.addHandler(handler)
 
+SECRET_TOKEN = ''.join(random.choice(string.ascii_uppercase) for i in range(20))
 
-def get_user_data_from_token(token):
-    token_dict = verify_token(token)
-    if token_dict:
-        return token_dict
-    logger.error(f'Could not verify token: {token}')
-    return False
+def create_token(sub):
+    token = jwt.encode({
+        'sub': sub,
+        'iat': datetime.utcnow(),
+        'exp': datetime.utcnow() + timedelta(minutes=60*8)},
+        secret_token())
+    return token
 
-def get_secret_token():
+def secret_token():
     # TODO: Obviously, this should be updated to AWS KMS
-    return 'SECRET_TOKEN_HERE'
+    return SECRET_TOKEN
 
 def verify_token(token):  
     try: 
-        response = jwt.decode(token, get_secret_token())
+        response = jwt.decode(token, secret_token())
     except:
         logger.error(f'Bad token: {token}')
         return False
     return response
+
+def token_to_userid(token):
+    jwt = verify_token(token)
+    if not jwt:
+        return False
+    return users.lookup(jwt.get('sub')).get('id')

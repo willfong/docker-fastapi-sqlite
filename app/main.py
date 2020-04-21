@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from .routers import login, messages
+from .routers import users, messages
 from .services import util
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
@@ -11,7 +11,7 @@ app = FastAPI()
 # files from S3 directly.
 app.mount("/static", StaticFiles(directory="/app/app/static"), name="static")
 
-app.include_router(login.router, prefix="/login")
+app.include_router(users.router, prefix="/users")
 app.include_router(messages.router, prefix="/messages")
 
 
